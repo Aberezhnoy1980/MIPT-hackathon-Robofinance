@@ -3,6 +3,7 @@ build/*
 *.iml
 out/*
 .gradle/*
+.venv/*
 target/*
 working_with_datasets/data/*
 working_with_datasets/myenv/*
