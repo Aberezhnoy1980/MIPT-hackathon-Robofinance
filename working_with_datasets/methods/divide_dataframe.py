@@ -7,6 +7,7 @@ from .variables.cols_to_drop import cols_to_drop
 from .df_categorical_compressed_and_indicatored import df_categorical_compressed
 from .df_continuous_compressed import df_continuous_compressed
 
+
 def divide_dataframe(df_bki:pd.DataFrame):
     usd_loan_idx = df_bki.loc[(df_bki['account_amt_currency_code'] == 'USD') | (df_bki['account_amt_currency_code'] == 'USD')].index
     df_bki.drop(usd_loan_idx, inplace=True)
