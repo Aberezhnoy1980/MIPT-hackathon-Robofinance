@@ -33,4 +33,4 @@ cols_continuous_variables = [
 'cred_max_overdue',
 ]
 
-cols_continuous_variables.append(acc_uid)
+cols_continuous_variables.append(application_id)

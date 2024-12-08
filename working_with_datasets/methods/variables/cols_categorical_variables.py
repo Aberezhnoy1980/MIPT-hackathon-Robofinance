@@ -27,9 +27,8 @@ cols_categorical_variables = [
 'arrear_last_payment_due_code',
 'arrear_unconfirm_grace',
 'due_arrear_last_payment_due_code',
-'past_due_last_payment_due_code',
-'attr_value'
+'past_due_last_payment_due_code'
 ]
 
 
-cols_categorical_variables.append(acc_uid)
+cols_categorical_variables.append(application_id)

@@ -30,4 +30,4 @@ datetime_cols = [
 'past_due_principal_missed_date',
 'past_due_int_missed_date']
 
-datetime_cols.append(acc_uid)
+datetime_cols.append(application_id)
