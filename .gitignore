@@ -4,9 +4,11 @@ build/*
 out/*
 .gradle/*
 .venv/*
+myenv/*
 target/*
-working_with_datasets/data/*
-working_with_datasets/myenv/*
+working_with_datasets/data/df_BKI_30k.csv
+working_with_datasets/data/df_target_30k.csv
+working_with_datasets/data/df_test_notarget_10k.csv
 .DS_Store
 .gitignore
 
