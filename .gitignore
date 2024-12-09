@@ -10,4 +10,5 @@ working_with_datasets/data/df_BKI_30k.csv
 working_with_datasets/data/df_target_30k.csv
 working_with_datasets/data/df_test_notarget_10k.csv
 .DS_Store
+.gitignore
 
