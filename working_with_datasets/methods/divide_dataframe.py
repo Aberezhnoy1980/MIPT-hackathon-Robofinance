@@ -9,7 +9,7 @@ from .df_continuous_compressed import df_continuous_compressed
 from .cols_to_datetime import cols_to_datetime
 
 
-def divide_dataframe(df_bki:pd.DataFrame):
+def divide_dataframe(df_bki:pd.DataFrame, target_df:pd.DataFrame):
 
     usd_loan_idx = df_bki.loc[(df_bki['account_amt_currency_code'] == 'USD') | (df_bki['account_amt_currency_code'] == 'USD')].index
     df_bki.drop(usd_loan_idx, inplace=True)
@@ -31,4 +31,10 @@ def divide_dataframe(df_bki:pd.DataFrame):
 
     final_df = pd.merge(intermediate_df, intermediate_df1, left_on='application_id', right_on='application_id')
 
-    return final_df
+    final_df.fillna(0.0, inplace=True)
+
+    final_df_plus_target = pd.merge(final_df, target_df, left_on='application_id', right_on='application_id')
+
+    final_df_plus_target.drop(['application_id', 'client_id'], axis=1, inplace=True)
+
+    return final_df_plus_target

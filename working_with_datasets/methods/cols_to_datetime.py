@@ -69,7 +69,7 @@ def cols_to_datetime(df_dates:pd.DataFrame) -> pd.DataFrame:
     cols_for_datetime_format.append('negative_score')
     df_dates.drop(columns=cols_for_datetime_format, inplace=True)
 
-    df_dates = pd.get_dummies(df_dates, columns=['negative_score_to_categorical'], dtype=int)
+    df_dates = pd.get_dummies(df_dates, columns=['negative_score_to_categorical'], dtype=int, dummy_na=False)
 
     df_dates_groupped = df_dates.groupby(['application_id'], as_index=False).agg(
         credit_duration_mean = ('credit_duration', 'mean'),
