@@ -27,6 +27,8 @@ def log_regression_predict_with_target(final_df:pd.DataFrame, cols_to_drop:list,
     print(f'LogRegression test score: {log_reg_model.score(X_test, y_test)}')
     print(classification_report(y_test, log_reg_predict))
 
+    
+
     return log_reg_predict
 
 

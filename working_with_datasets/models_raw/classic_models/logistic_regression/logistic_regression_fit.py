@@ -47,6 +47,13 @@ def log_regression_fit(final_df:pd.DataFrame, model_save_dir:str) -> list:
     with open(file_dir, 'wb') as file:
         pickle.dump(log_reg, file)
 
+    # for name in model_summary['name']:
+    #     optb = binning_process.get_binned_variable(name)
+    #     optb.binning_table.build()        
+    #     optb.binning_table.plot(metric="event_rate")
+
+    print(model_summary)
+
     return cols_to_drop
     
     
