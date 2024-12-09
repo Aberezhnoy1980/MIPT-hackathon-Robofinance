@@ -13,6 +13,8 @@ def df_categorical_compressed(df_categorical:pd.DataFrame) -> pd.DataFrame:
 
     columns_for_indicator_variables = [x for x in df_categorical.columns if x != 'application_id']
 
-    df_categorical = pd.get_dummies(df_categorical, columns=columns_for_indicator_variables, dtype=int, dummy_na=True)
+    df_categorical = pd.get_dummies(df_categorical, columns=columns_for_indicator_variables, dtype=int, dummy_na=False)
+
+    df_categorical_groupped = df_categorical.groupby(['application_id'], as_index=False).sum()
     
-    return df_categorical
+    return df_categorical_groupped
