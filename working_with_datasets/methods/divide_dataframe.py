@@ -26,4 +26,9 @@ def divide_dataframe(df_bki:pd.DataFrame):
         application_count=(acc_uid, 'count')
     )
 
-    return df_dates, df_continuous, df_categorical, df_application_id
+    intermediate_df = pd.merge(df_dates, df_continuous, left_on='application_id', right_on='application_id')
+    intermediate_df1 = pd.merge(df_categorical, df_application_id, left_on='application_id', right_on='application_id')
+
+    final_df = pd.merge(intermediate_df, intermediate_df1, left_on='application_id', right_on='application_id')
+
+    return final_df
