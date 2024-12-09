@@ -1,4 +1,5 @@
 from sklearn.linear_model import LogisticRegression
+from optbinning import BinningProcess
 import pandas as pd
 import pickle
 

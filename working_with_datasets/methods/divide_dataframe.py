@@ -35,6 +35,9 @@ def divide_dataframe(df_bki:pd.DataFrame, target_df:pd.DataFrame):
 
     final_df_plus_target = pd.merge(final_df, target_df, left_on='application_id', right_on='application_id')
 
+    final_df_plus_target.set_index(['reporting_dt'], inplace=True)
+    final_df.sort_index(ascending=True, inplace=True)
+
     final_df_plus_target.drop(['application_id', 'client_id'], axis=1, inplace=True)
 
     return final_df_plus_target

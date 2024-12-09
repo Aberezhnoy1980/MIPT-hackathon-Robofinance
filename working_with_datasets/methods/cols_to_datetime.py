@@ -58,6 +58,7 @@ def negative_score_to_categorical(df_dates:pd.DataFrame) -> str:
 
 def cols_to_datetime(df_dates:pd.DataFrame) -> pd.DataFrame:
     cols_for_datetime_format = [x for x in df_dates.columns if x != 'application_id']
+    cols_for_final_removal = [x for x in cols_for_datetime_format if x != 'reporting_dt']
 
     df_dates[cols_for_datetime_format] = df_dates[cols_for_datetime_format].apply(pd.to_datetime)
 
@@ -67,7 +68,7 @@ def cols_to_datetime(df_dates:pd.DataFrame) -> pd.DataFrame:
     df_dates['negative_score'] = df_dates.apply(negative_scoring, axis=1)
     df_dates['negative_score_to_categorical'] = df_dates.apply(negative_score_to_categorical, axis=1)
     cols_for_datetime_format.append('negative_score')
-    df_dates.drop(columns=cols_for_datetime_format, inplace=True)
+    df_dates.drop(columns=cols_for_final_removal, inplace=True)
 
     df_dates = pd.get_dummies(df_dates, columns=['negative_score_to_categorical'], dtype=int, dummy_na=False)
 
@@ -77,6 +78,7 @@ def cols_to_datetime(df_dates:pd.DataFrame) -> pd.DataFrame:
         credit_duration_min = ('credit_duration', 'min'),
         credit_duration_max = ('credit_duration', 'max'),
 
+        reporting_dt = ('reporting_dt', 'first'),
         negative_score_to_categorical_no_overdue = ('negative_score_to_categorical_no_overdue', 'sum'),
         negative_score_to_categorical_mild_overdue = ('negative_score_to_categorical_mild_overdue', 'sum'),
         negative_score_to_categorical_moderate_overdue = ('negative_score_to_categorical_moderate_overdue', 'sum'),
