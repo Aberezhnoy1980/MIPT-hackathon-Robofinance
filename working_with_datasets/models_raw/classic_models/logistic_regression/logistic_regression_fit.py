@@ -76,18 +76,18 @@ def log_regression_fit(final_df:pd.DataFrame, model_save_dir:str) -> (list, pd.D
         with open(file_dir, 'wb') as file:
             pickle.dump(log_reg, file)
 
-    for name in model_summary['name']:
+    model_summary.sort_values(by=['iv', 'gini'], ascending=False, inplace=True)
+
+    model_summary_clean = model_summary[~model_summary['name'].isin(cols_to_drop)]
+
+    for name in model_summary.head(10)['name']:
         optb = binning_process.get_binned_variable(name)
         print('------------------------')
         print(f'Variable name: {name}')
         print('------------------------')
         print(optb.binning_table.build())        
         print('************************')
-        # optb.binning_table.plot(metric="event_rate")
-
-    model_summary.sort_values(by=['iv', 'gini'], ascending=False, inplace=True)
-
-    model_summary_clean = model_summary[~model_summary['name'].isin(cols_to_drop)]
+        optb.binning_table.plot(metric="event_rate")    
 
     return cols_to_drop, model_summary_clean
     
