@@ -6,7 +6,7 @@ import pickle
 
 def log_regression_predict_with_target(final_df:pd.DataFrame, cols_to_drop:list, model_save_dir:str) -> None:
     
-    if(not cols_to_drop):
+    if(len(cols_to_drop) > 0):
         final_data_df = final_df.drop(columns=cols_to_drop)        
     else:
         final_data_df = final_df
@@ -27,16 +27,23 @@ def log_regression_predict_with_target(final_df:pd.DataFrame, cols_to_drop:list,
     print(f'LogRegression test score: {log_reg_model.score(X_test, y_test)}')
     print(classification_report(y_test, log_reg_predict))
 
-    
-
     return log_reg_predict
 
 
-def log_regression_predict_without_target(test_df:pd.DataFrame, model_save_dir:str) -> None:    
+def log_regression_predict_without_target(final_df:pd.DataFrame, cols_to_drop:list, model_save_dir:str) -> None:    
     file_dir = model_save_dir + 'logistic_regression_model.pkl'
+
+    if(len(cols_to_drop) > 0):
+        final_data_df = final_df.drop(columns=cols_to_drop)        
+    else:
+        final_data_df = final_df
+
+    data = final_data_df.values
+
     with open(file_dir, 'rb') as file:
         log_reg_model = pickle.load(file)
-    log_reg_predict = log_reg_model.predict(test_df)
+
+    log_reg_predict = log_reg_model.predict(data)
 
     return log_reg_predict
     
