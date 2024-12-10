@@ -26,7 +26,7 @@ def log_regression_fit(final_df:pd.DataFrame, model_save_dir:str) -> (list, pd.D
     log_reg = Pipeline(
     steps=[
         ('binning_process', binning_process),
-        ('log_reg_classification', LogisticRegression(random_state=42, max_iter=1000))
+        ('log_reg_classification', LogisticRegression(random_state=42, max_iter=200))
     ]
     )
 
