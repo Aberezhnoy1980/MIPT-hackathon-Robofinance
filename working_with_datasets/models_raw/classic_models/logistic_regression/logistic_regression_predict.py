@@ -54,11 +54,13 @@ def log_regression_predict_without_target(final_df:pd.DataFrame, cols_to_drop:li
 
     log_reg_predict = log_reg_model.predict(data)
 
+    predict_proba = log_reg_model.predict_proba(data)
+
     save_model_results = model_result_dir + 'logistic_regression_no_target_predict.csv'
 
     pd.Series(log_reg_predict).to_csv(save_model_results)
 
-    return log_reg_predict
+    return predict_proba
     
     
     
