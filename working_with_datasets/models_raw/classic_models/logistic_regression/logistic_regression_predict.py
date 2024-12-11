@@ -4,61 +4,71 @@ import pandas as pd
 import numpy as np
 import pickle
 
-def log_regression_predict_with_target(final_df:pd.DataFrame, cols_to_drop:list, model_save_dir:str, model_result_dir:str) -> None:
-    
-    if(len(cols_to_drop) > 0):
-        final_data_df = final_df.drop(columns=cols_to_drop)        
-    else:
-        final_data_df = final_df
-        
+def log_regression_predict_with_target(data:pd.DataFrame, target:pd.Series, model_save_dir:str, model_result_dir:str) -> None:
 
-    variable_names = [x for x in final_data_df.columns if x != 'target']
-    data = final_data_df[variable_names]
-    target = final_data_df['target']
-
-    X_train, X_test, y_train, y_test = train_test_split(data.values, target.values, random_state=42, test_size=0.3)
+    X_train, X_test, y_train, y_test = train_test_split(data, target.values, random_state=42, test_size=0.3)
 
     file_dir = model_save_dir + 'logistic_regression_model.pkl'
     # target = test_df['target']
     with open(file_dir, 'rb') as file:
         log_reg_model = pickle.load(file)
+        
+    variable_names = [x for x in data.columns if x != 'application_id']
 
-    log_reg_predict_train = log_reg_model.predict(X_train)
-    log_reg_predict_test = log_reg_model.predict(X_test)
+    log_reg_predict_train = log_reg_model.predict_proba(X_train[variable_names].values)
+    log_reg_predict_test = log_reg_model.predict_proba(X_test[variable_names].values)
 
-    print(f'LogRegression test score: {log_reg_model.score(X_test, y_test)}')
-    print(classification_report(y_test, log_reg_predict_test))
+    print(f'LogRegression test score: {log_reg_model.score(X_test[variable_names].values, y_test)}')
+    print(classification_report(y_test, log_reg_model.predict(X_test[variable_names].values)))
 
     save_model_results_train = model_result_dir + 'logistic_regression_train_predict.csv'
     save_model_results_test = model_result_dir + 'logistic_regression_test_predict.csv'
+    
+    log_reg_predict_train_0 = log_reg_predict_train.T[0]
+    log_reg_predict_train_1 = log_reg_predict_train.T[1]
+    
+    log_reg_predict_test_0 = log_reg_predict_test.T[0]
+    log_reg_predict_test_1 = log_reg_predict_test.T[1]
+    
+    predict_df_train = pd.DataFrame({'application_id': X_train['application_id'], 'predict_proba_0': log_reg_predict_train_0, 'predict_proba_1':log_reg_predict_train_1})
+    predict_df_test = pd.DataFrame({'application_id': X_test['application_id'], 'predict_proba_0': log_reg_predict_test_0, 'predict_proba_1':log_reg_predict_test_1})
+    
 
-    pd.Series(log_reg_predict_train).to_csv(save_model_results_train)
+    predict_df_train.to_csv(save_model_results_train)
 
-    pd.Series(log_reg_predict_test).to_csv(save_model_results_test)
+    predict_df_test.to_csv(save_model_results_test)
 
-    return log_reg_predict_test
+    return predict_df_train, predict_df_test
 
 
-def log_regression_predict_without_target(final_df:pd.DataFrame, cols_to_drop:list, model_save_dir:str, model_result_dir:str) -> None:    
+def log_regression_predict_without_target(data:pd.DataFrame, model_save_dir:str, model_result_dir:str) -> None:  
+    
+    variable_names = [x for x in data.columns if x != 'application_id']
+
     file_dir = model_save_dir + 'logistic_regression_model.pkl'
-
-    if(len(cols_to_drop) > 0):
-        final_data_df = final_df.drop(columns=cols_to_drop)        
-    else:
-        final_data_df = final_df
-
-    data = final_data_df.values
 
     with open(file_dir, 'rb') as file:
         log_reg_model = pickle.load(file)
 
-    log_reg_predict = log_reg_model.predict(data)
+    # log_reg_predict = log_reg_model.predict(data[~'application_id'])
+
+    predict_proba = log_reg_model.predict_proba(data[variable_names].values)
 
     save_model_results = model_result_dir + 'logistic_regression_no_target_predict.csv'
 
-    pd.Series(log_reg_predict).to_csv(save_model_results)
+    # pd.Series(log_reg_predict).to_csv(save_model_results)
+    
+    predict_proba_0 = pd.Series(predict_proba.T[0])
+    
+    predict_proba_1 = pd.Series(predict_proba.T[1])
+    
+    predict_df = pd.DataFrame({'report_dt': data.index, 'application_id':data['application_id'].values,'predict_proba_0': predict_proba_0, 'predict_proba_1':predict_proba_1})
+    
+    predict_df.set_index('report_dt', inplace=True)
+    
+    predict_df.to_csv(save_model_results)
 
-    return log_reg_predict
+    return predict_df
     
     
     
