@@ -52,10 +52,7 @@ def divide_dataframe(df_bki:pd.DataFrame, target_df=None) -> pd.DataFrame:
     final_df.set_index(['reporting_dt'], inplace=True)
     final_df.sort_index(ascending=True, inplace=True)
 
-    cols = ['application_id', 'client_id']
-
-    for col in cols:
-        if(col in final_df.columns):
-            final_df.drop(columns=[col], inplace=True)
+    if('client_id' in final_df.columns):
+        final_df.drop(columns=['client_id'], inplace=True)
 
     return final_df
