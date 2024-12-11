@@ -15,11 +15,11 @@ def log_regression_predict_with_target(data:pd.DataFrame, target:pd.Series, mode
         
     variable_names = [x for x in data.columns if x != 'application_id']
 
-    log_reg_predict_train = log_reg_model.predict_proba(X_train[variable_names])
-    log_reg_predict_test = log_reg_model.predict_proba(X_test[variable_names])
+    log_reg_predict_train = log_reg_model.predict_proba(X_train[variable_names].values)
+    log_reg_predict_test = log_reg_model.predict_proba(X_test[variable_names].values)
 
-    print(f'LogRegression test score: {log_reg_model.score(X_test, y_test)}')
-    print(classification_report(y_test, log_reg_predict_test))
+    print(f'LogRegression test score: {log_reg_model.score(X_test[variable_names].values, y_test)}')
+    print(classification_report(y_test, log_reg_model.predict(X_test[variable_names].values)))
 
     save_model_results_train = model_result_dir + 'logistic_regression_train_predict.csv'
     save_model_results_test = model_result_dir + 'logistic_regression_test_predict.csv'
@@ -41,7 +41,10 @@ def log_regression_predict_with_target(data:pd.DataFrame, target:pd.Series, mode
     return predict_df_train, predict_df_test
 
 
-def log_regression_predict_without_target(data:pd.DataFrame, model_save_dir:str, model_result_dir:str) -> None:    
+def log_regression_predict_without_target(data:pd.DataFrame, model_save_dir:str, model_result_dir:str) -> None:  
+    
+    variable_names = [x for x in data.columns if x != 'application_id']
+
     file_dir = model_save_dir + 'logistic_regression_model.pkl'
 
     with open(file_dir, 'rb') as file:
@@ -49,7 +52,7 @@ def log_regression_predict_without_target(data:pd.DataFrame, model_save_dir:str,
 
     # log_reg_predict = log_reg_model.predict(data[~'application_id'])
 
-    predict_proba = log_reg_model.predict_proba(data[~'application_id'])
+    predict_proba = log_reg_model.predict_proba(data[variable_names])
 
     save_model_results = model_result_dir + 'logistic_regression_no_target_predict.csv'
 
@@ -59,7 +62,11 @@ def log_regression_predict_without_target(data:pd.DataFrame, model_save_dir:str,
     
     predict_proba_1 = pd.Series(predict_proba.T[1])
     
-    predict_df = pd.DataFrame({'application_id':data['application_id'],'predict_proba_0': predict_proba_0, 'predict_proba_1':predict_proba_1})
+    print(predict_proba_0)
+    print(predict_proba_1)
+    print(data['application_id'].values)
+    
+    predict_df = pd.DataFrame({'application_id':data['application_id'].values,'predict_proba_0': predict_proba_0, 'predict_proba_1':predict_proba_1})
     
     predict_df.to_csv(save_model_results)
 
