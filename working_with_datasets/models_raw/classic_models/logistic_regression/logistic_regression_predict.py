@@ -52,7 +52,7 @@ def log_regression_predict_without_target(data:pd.DataFrame, model_save_dir:str,
 
     # log_reg_predict = log_reg_model.predict(data[~'application_id'])
 
-    predict_proba = log_reg_model.predict_proba(data[variable_names])
+    predict_proba = log_reg_model.predict_proba(data[variable_names].values)
 
     save_model_results = model_result_dir + 'logistic_regression_no_target_predict.csv'
 
@@ -62,11 +62,9 @@ def log_regression_predict_without_target(data:pd.DataFrame, model_save_dir:str,
     
     predict_proba_1 = pd.Series(predict_proba.T[1])
     
-    print(predict_proba_0)
-    print(predict_proba_1)
-    print(data['application_id'].values)
+    predict_df = pd.DataFrame({'report_dt': data.index, 'application_id':data['application_id'].values,'predict_proba_0': predict_proba_0, 'predict_proba_1':predict_proba_1})
     
-    predict_df = pd.DataFrame({'application_id':data['application_id'].values,'predict_proba_0': predict_proba_0, 'predict_proba_1':predict_proba_1})
+    predict_df.set_index('report_dt', inplace=True)
     
     predict_df.to_csv(save_model_results)
 
